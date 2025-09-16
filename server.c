@@ -1,3 +1,4 @@
+// server.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,14 +62,14 @@ int main() {
         if (seq_num == expected_seq) {
             printf("Received packet with seq %d: %s\n", seq_num, msg);
             char ack_msg[10];
-            sprintf(ack_msg, "ACK%d", seq_num);
+            snprintf(ack_msg, sizeof(ack_msg), "ACK%d", seq_num);
             sendto(sockfd, ack_msg, strlen(ack_msg), 0, (struct sockaddr *)&cliaddr, len);
             expected_seq++;
         } else {
             printf("Out of order packet received with seq %d, expected %d\n", seq_num, expected_seq);
             // Send ACK for last correctly received frame (expected_seq - 1)
             char ack_msg[10];
-            sprintf(ack_msg, "ACK%d", expected_seq - 1);
+            snprintf(ack_msg, sizeof(ack_msg), "ACK%d", expected_seq - 1);
             sendto(sockfd, ack_msg, strlen(ack_msg), 0, (struct sockaddr *)&cliaddr, len);
         }
     }
